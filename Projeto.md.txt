@@ -1,0 +1,3 @@
+# Lotofácil Generator
+
+Projeto em Python para gerar jogos aleatórios da Lotofácil com interface e armazenamento em banco de dados SQLite.
