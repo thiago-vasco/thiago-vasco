@@ -121,7 +121,7 @@ root = tk.Tk()
 root.title("Gerador de Jogos Lotofácil")
 
 # Aumentando o tamanho da janela (5x maior)
-root.geometry("800x600")  # 800x600 pixels para a janela maior
+root.geometry("1000x600")  # 1000x600 pixels para a janela maior
 
 # Criando o Frame para a parte principal da interface
 frame = tk.Frame(root)
@@ -133,7 +133,7 @@ frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
 # Criando o Frame para o lado direito (onde estará a lista de jogos)
 frame_direito = tk.Frame(frame)
-frame_direito.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+frame_direito.pack(side=tk.RIGHT, fill=tk.Y, padx=10)
 
 # Botão para gerar jogo (lado esquerdo)
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
@@ -146,6 +146,14 @@ resultado_label.pack(pady=10)
 # Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
 listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Tamanho fixo para a Listbox
 listbox_jogos.pack(side=tk.LEFT, fill=tk.Y)
+
+# Adicionando uma estrutura de canvas para permitir que a lista de jogos ocupe a área fixada
+canvas = tk.Canvas(frame_direito)
+canvas.pack(side=tk.LEFT, fill=tk.Y, expand=True)
+
+# Criando uma área de rolagem (scroll) para que a lista de jogos não se ajuste
+scrollbar = tk.Scrollbar(canvas)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
