@@ -132,8 +132,8 @@ frame_esquerdo = tk.Frame(frame)
 frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
 # Criando o Frame para o lado direito (onde estará a lista de jogos)
-frame_direito = tk.Frame(frame)
-frame_direito.pack(side=tk.RIGHT, fill=tk.Y, padx=10)
+frame_direito = tk.Frame(frame, width=300, height=600)  # Definindo o tamanho fixo do Frame do lado direito
+frame_direito.pack(side=tk.RIGHT, padx=10, fill=tk.Y)
 
 # Botão para gerar jogo (lado esquerdo)
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
