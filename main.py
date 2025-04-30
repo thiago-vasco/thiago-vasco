@@ -129,7 +129,7 @@ frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
 
 # Criando o Frame para o lado esquerdo (onde estará o botão)
 frame_esquerdo = tk.Frame(frame)
-frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y)
+frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
 # Criando o Frame para o lado direito (onde estará a lista de jogos)
 frame_direito = tk.Frame(frame)
@@ -145,13 +145,7 @@ resultado_label.pack(pady=10)
 
 # Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
 listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Tamanho fixo para a Listbox
-listbox_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
-
-# Adicionando a barra de rolagem para a Listbox
-scrollbar = tk.Scrollbar(frame_direito, orient=tk.VERTICAL, command=listbox_jogos.yview)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-listbox_jogos.config(yscrollcommand=scrollbar.set)
+listbox_jogos.pack(side=tk.LEFT, fill=tk.Y)
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
