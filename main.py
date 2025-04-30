@@ -51,6 +51,7 @@ def mostrar_jogo():
     jogo = gerar_jogo()
     resultado_label.config(text="Jogo gerado: " + str(jogo))
     salvar_jogo(jogo)
+    atualizar_lista_jogos()
 
 # Função para fazer commit e push para o GitHub
 def atualizar_git():
@@ -84,12 +85,28 @@ def importar_excel_para_sqlite(arquivo_excel, indices_remover, nome_tabela='dado
     df = df.drop(df.columns[indices_remover], axis=1)
 
     # Criar conexão com banco SQLite (se o banco não existir, ele será criado)
-    engine = create_engine('sqlite:///Importados do site da lotérica.db')  # 'Importados.db' é o nome do seu arquivo SQLite
+    engine = create_engine('sqlite:///Importados.db')  # 'Importados.db' é o nome do seu arquivo SQLite
 
     # Exportar para o banco (use 'replace' se você quiser substituir os dados da tabela, ou 'append' para adicionar mais dados)
     df.to_sql(nome_tabela, con=engine, if_exists='replace', index=False)
 
     print("Importação de dados concluída com sucesso!")
+
+# Função para atualizar a lista de jogos na interface
+def atualizar_lista_jogos():
+    # Conectar ao banco SQLite para buscar os jogos gerados
+    conn = sqlite3.connect('JogosGerados.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 10")  # Pega os últimos 10 jogos gerados
+    jogos = c.fetchall()
+    conn.close()
+
+    # Limpar a lista de jogos atual
+    listbox_jogos.delete(0, tk.END)
+
+    # Adicionar os jogos mais recentes à lista
+    for jogo in jogos:
+        listbox_jogos.insert(tk.END, f"Jogo {jogo[0]}: {jogo[1:]}")
 
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"  # Caminho do seu arquivo Excel
@@ -103,6 +120,9 @@ importar_excel_para_sqlite(arquivo_excel, indices_remover)
 root = tk.Tk()
 root.title("Gerador de Jogos Lotofácil")
 
+# Aumentando o tamanho da janela (5x maior)
+root.geometry("800x600")  # 800x600 pixels para a janela maior
+
 # Botão para gerar jogo
 gerar_btn = tk.Button(root, text="Gerar Jogo", command=mostrar_jogo)
 gerar_btn.pack(pady=10)
@@ -110,6 +130,13 @@ gerar_btn.pack(pady=10)
 # Label para exibir o resultado
 resultado_label = tk.Label(root, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
+
+# Criando a Listbox para exibir os jogos gerados
+listbox_jogos = tk.Listbox(root, width=50, height=15)
+listbox_jogos.pack(pady=10)
+
+# Atualizar lista de jogos
+atualizar_lista_jogos()
 
 # Configura o evento de fechamento da janela
 root.protocol("WM_DELETE_WINDOW", on_close)
