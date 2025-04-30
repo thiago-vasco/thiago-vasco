@@ -143,9 +143,15 @@ gerar_btn.pack(pady=10)
 resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
-# Criando a Listbox para exibir os jogos gerados (lado direito)
-listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
+# Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
+listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Tamanho fixo para a Listbox
 listbox_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+# Adicionando a barra de rolagem para a Listbox
+scrollbar = tk.Scrollbar(frame_direito, orient=tk.VERTICAL, command=listbox_jogos.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+listbox_jogos.config(yscrollcommand=scrollbar.set)
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
