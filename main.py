@@ -84,7 +84,7 @@ def importar_excel_para_sqlite(arquivo_excel, indices_remover, nome_tabela='dado
     df = df.drop(df.columns[indices_remover], axis=1)
 
     # Criar conexão com banco SQLite (se o banco não existir, ele será criado)
-    engine = create_engine('sqlite:///Importados.db')  # 'Importados.db' é o nome do seu arquivo SQLite
+    engine = create_engine('sqlite:///Importados do site da lotérica.db')  # 'Importados.db' é o nome do seu arquivo SQLite
 
     # Exportar para o banco (use 'replace' se você quiser substituir os dados da tabela, ou 'append' para adicionar mais dados)
     df.to_sql(nome_tabela, con=engine, if_exists='replace', index=False)
