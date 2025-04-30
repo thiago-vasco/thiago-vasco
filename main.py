@@ -127,20 +127,24 @@ root.geometry("800x600")  # 800x600 pixels para a janela maior
 frame = tk.Frame(root)
 frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
 
-# Botão para gerar jogo
-gerar_btn = tk.Button(frame, text="Gerar Jogo", command=mostrar_jogo)
+# Criando o Frame para o lado esquerdo (onde estará o botão)
+frame_esquerdo = tk.Frame(frame)
+frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y)
+
+# Criando o Frame para o lado direito (onde estará a lista de jogos)
+frame_direito = tk.Frame(frame)
+frame_direito.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+# Botão para gerar jogo (lado esquerdo)
+gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
 gerar_btn.pack(pady=10)
 
-# Label para exibir o resultado
-resultado_label = tk.Label(frame, text="Clique para gerar um jogo.")
+# Label para exibir o resultado (lado esquerdo)
+resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
-# Criando o Frame para a lista de jogos no lado direito
-frame_jogos = tk.Frame(frame)
-frame_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
-
-# Criando a Listbox para exibir os jogos gerados
-listbox_jogos = tk.Listbox(frame_jogos, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
+# Criando a Listbox para exibir os jogos gerados (lado direito)
+listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
 listbox_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Atualizar lista de jogos
