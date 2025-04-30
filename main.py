@@ -1,8 +1,10 @@
+import pandas as pd
 import tkinter as tk
 import random
 import sqlite3
 import os
 import subprocess
+from sqlalchemy import create_engine
 
 # Função para gerar um jogo de 15 números aleatórios entre 1 e 25
 def gerar_jogo():
@@ -14,7 +16,7 @@ def salvar_jogo(jogo):
     c = conn.cursor()
 
     # Cria a tabela se não existir, com 15 colunas (n1 a n15)
-    c.execute('''
+    c.execute(''' 
         CREATE TABLE IF NOT EXISTS jogos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             n1 INTEGER,
@@ -36,7 +38,7 @@ def salvar_jogo(jogo):
     ''')
 
     # Insere os números nas colunas correspondentes
-    c.execute('''
+    c.execute(''' 
         INSERT INTO jogos (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', tuple(jogo))
@@ -56,7 +58,7 @@ def atualizar_git():
         # Caminho onde seu repositório Git está localizado
         repo_dir = r'E:\ProjetoLOTOFACIL'  # Substitua com o caminho correto do seu repositório local
         os.chdir(repo_dir)  # Altera para o diretório do repositório
-        
+
         # Executa os comandos Git
         subprocess.run(['git', 'add', '.'], check=True)  # Adiciona todas as mudanças
         subprocess.run(['git', 'commit', '-m', 'Atualização automática'], check=True)  # Faz o commit
@@ -69,6 +71,33 @@ def atualizar_git():
 def on_close():
     atualizar_git()  # Atualiza o Git ao fechar a janela
     root.destroy()   # Fecha a janela
+
+# Função para importar dados do Excel, remover colunas pelo índice e salvar no banco SQLite
+def importar_excel_para_sqlite(arquivo_excel, indices_remover, nome_tabela='dados_importados'):
+    # Ler a planilha inteira ou por aba
+    df = pd.read_excel(arquivo_excel, sheet_name='LOTOFÁCIL')
+
+    # Verificar as colunas do DataFrame
+    print("Colunas no DataFrame:", df.columns)
+
+    # Remover as colunas pelos índices
+    df = df.drop(df.columns[indices_remover], axis=1)
+
+    # Criar conexão com banco SQLite (se o banco não existir, ele será criado)
+    engine = create_engine('sqlite:///Importados.db')  # 'Importados.db' é o nome do seu arquivo SQLite
+
+    # Exportar para o banco (use 'replace' se você quiser substituir os dados da tabela, ou 'append' para adicionar mais dados)
+    df.to_sql(nome_tabela, con=engine, if_exists='replace', index=False)
+
+    print("Importação de dados concluída com sucesso!")
+
+# Caminho do arquivo Excel e índices das colunas a serem removidas
+arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"  # Caminho do seu arquivo Excel
+# Índices das colunas que você quer remover: 2, 18, 19, 20 até 33 (lembre-se que o índice é baseado em 0)
+indices_remover = [1, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
+
+# Importa dados do Excel para o banco Importados.db
+importar_excel_para_sqlite(arquivo_excel, indices_remover)
 
 # Criando a interface gráfica com Tkinter
 root = tk.Tk()
