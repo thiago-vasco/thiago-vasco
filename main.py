@@ -144,7 +144,7 @@ resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
 # Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
-listbox_jogos = tk.Listbox(frame_direito, width=50, height=25)  # Tamanho fixo para a Listbox
+listbox_jogos = tk.Listbox(frame_direito, width=50, height=50)  # Tamanho fixo para a Listbox
 listbox_jogos.pack(side=tk.LEFT, fill=tk.Y)
 
 # Adicionando uma estrutura de canvas para permitir que a lista de jogos ocupe a área fixada
