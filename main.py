@@ -123,17 +123,24 @@ root.title("Gerador de Jogos Lotofácil")
 # Aumentando o tamanho da janela (5x maior)
 root.geometry("800x600")  # 800x600 pixels para a janela maior
 
+# Criando um Frame para organizar melhor os widgets
+frame = tk.Frame(root)
+frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+
 # Botão para gerar jogo
-gerar_btn = tk.Button(root, text="Gerar Jogo", command=mostrar_jogo)
+gerar_btn = tk.Button(frame, text="Gerar Jogo", command=mostrar_jogo)
 gerar_btn.pack(pady=10)
 
 # Label para exibir o resultado
-resultado_label = tk.Label(root, text="Clique para gerar um jogo.")
+resultado_label = tk.Label(frame, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
-# Criando a Listbox para exibir os jogos gerados
-listbox_jogos = tk.Listbox(root, width=50, height=15)
-listbox_jogos.pack(pady=10)
+# Criando a Listbox para exibir os jogos gerados, à direita da janela
+listbox_frame = tk.Frame(frame)
+listbox_frame.pack(side=tk.RIGHT, padx=10)
+
+listbox_jogos = tk.Listbox(listbox_frame, width=50, height=15)
+listbox_jogos.pack()
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
