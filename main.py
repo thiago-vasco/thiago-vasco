@@ -135,8 +135,12 @@ gerar_btn.pack(pady=10)
 resultado_label = tk.Label(frame, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
+# Criando o Frame para a lista de jogos no lado direito
+frame_jogos = tk.Frame(frame)
+frame_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
 # Criando a Listbox para exibir os jogos gerados
-listbox_jogos = tk.Listbox(frame, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
+listbox_jogos = tk.Listbox(frame_jogos, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
 listbox_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Atualizar lista de jogos
