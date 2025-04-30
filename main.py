@@ -132,7 +132,7 @@ frame_esquerdo = tk.Frame(frame)
 frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
 # Criando o Frame para o lado direito (onde estará a lista de jogos)
-frame_direito = tk.Frame(frame, width=600, height=600)  # Definindo o tamanho fixo do Frame do lado direito
+frame_direito = tk.Frame(frame, width=300, height=600)  # Definindo o tamanho fixo do Frame do lado direito
 frame_direito.pack(side=tk.RIGHT, padx=10, fill=tk.Y)
 
 # Botão para gerar jogo (lado esquerdo)
@@ -144,7 +144,7 @@ resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
 # Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
-listbox_jogos = tk.Listbox(frame_direito, width=50, height=20)  # Tamanho fixo para a Listbox
+listbox_jogos = tk.Listbox(frame_direito, width=50, height=25)  # Tamanho fixo para a Listbox
 listbox_jogos.pack(side=tk.LEFT, fill=tk.Y)
 
 # Adicionando uma estrutura de canvas para permitir que a lista de jogos ocupe a área fixada
