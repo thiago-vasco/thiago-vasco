@@ -97,7 +97,7 @@ def atualizar_lista_jogos():
     # Conectar ao banco SQLite para buscar os jogos gerados
     conn = sqlite3.connect('JogosGerados.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 10")  # Pega os últimos 10 jogos gerados
+    c.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 50")  # Pega os últimos 50 jogos gerados
     jogos = c.fetchall()
     conn.close()
 
@@ -123,7 +123,7 @@ root.title("Gerador de Jogos Lotofácil")
 # Aumentando o tamanho da janela (5x maior)
 root.geometry("800x600")  # 800x600 pixels para a janela maior
 
-# Criando um Frame para organizar melhor os widgets
+# Criando o Frame para a parte principal da interface
 frame = tk.Frame(root)
 frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
 
@@ -135,12 +135,9 @@ gerar_btn.pack(pady=10)
 resultado_label = tk.Label(frame, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
-# Criando o Frame para a Listbox que mostrará os jogos gerados
-listbox_frame = tk.Frame(frame)
-listbox_frame.pack(side=tk.RIGHT, padx=10, fill=tk.BOTH, expand=True)
-
-listbox_jogos = tk.Listbox(listbox_frame, width=50, height=15)
-listbox_jogos.pack(fill=tk.BOTH, expand=True)
+# Criando a Listbox para exibir os jogos gerados
+listbox_jogos = tk.Listbox(frame, width=50, height=20)  # Aumentei a altura para mostrar mais jogos
+listbox_jogos.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
