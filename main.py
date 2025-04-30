@@ -108,6 +108,9 @@ def atualizar_lista_jogos():
     for jogo in jogos:
         listbox_jogos.insert(tk.END, f"Jogo {jogo[0]}: {jogo[1:]}")
 
+    # Atualizar a região de rolagem do Canvas para o tamanho correto
+    canvas.config(scrollregion=canvas.bbox("all"))
+
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"  # Caminho do seu arquivo Excel
 # Índices das colunas que você quer remover: 2, 18, 19, 20 até 33 (lembre-se que o índice é baseado em 0)
@@ -135,6 +138,21 @@ frame_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 frame_direito = tk.Frame(frame, width=300, height=600)  # Definindo o tamanho fixo do Frame do lado direito
 frame_direito.pack(side=tk.RIGHT, padx=10, fill=tk.Y)
 
+# Criando um Canvas para o lado direito
+canvas = tk.Canvas(frame_direito)
+canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+# Criando uma Scrollbar para a Listbox
+scrollbar = tk.Scrollbar(canvas)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
+listbox_jogos = tk.Listbox(canvas, width=55 , height=25, yscrollcommand=scrollbar.set)  # Tamanho fixo para a Listbox
+listbox_jogos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+# Configurando a scrollbar para a Listbox
+scrollbar.config(command=listbox_jogos.yview)
+
 # Botão para gerar jogo (lado esquerdo)
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
 gerar_btn.pack(pady=10)
@@ -142,18 +160,6 @@ gerar_btn.pack(pady=10)
 # Label para exibir o resultado (lado esquerdo)
 resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
-
-# Criando a Listbox para exibir os jogos gerados (lado direito) com tamanho fixo
-listbox_jogos = tk.Listbox(frame_direito, width=55 , height=25)  # Tamanho fixo para a Listbox
-listbox_jogos.pack(side=tk.LEFT, fill=tk.Y)
-
-# Adicionando uma estrutura de canvas para permitir que a lista de jogos ocupe a área fixada
-canvas = tk.Canvas(frame_direito)
-canvas.pack(side=tk.LEFT, fill=tk.Y, expand=True)
-
-# Criando uma área de rolagem (scroll) para que a lista de jogos não se ajuste
-scrollbar = tk.Scrollbar(canvas)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 # Atualizar lista de jogos
 atualizar_lista_jogos()
