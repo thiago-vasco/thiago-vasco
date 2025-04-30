@@ -101,7 +101,7 @@ def atualizar_lista_jogos():
     # Conectar ao banco SQLite para buscar os jogos gerados
     conn = sqlite3.connect('JogosGerados.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 100")  # Pega os últimos 100 jogos gerados, ajuste conforme necessário
+    c.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 101")  # Pega os últimos 100 jogos gerados, ajuste conforme necessário
     jogos = c.fetchall()
     conn.close()
 
