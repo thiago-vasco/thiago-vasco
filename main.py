@@ -80,7 +80,7 @@ def on_close():
 # Função para importar dados do Excel, remover colunas pelo índice e salvar no banco SQLite
 def importar_excel_para_sqlite(arquivo_excel, indices_remover, nome_tabela='dados_importados'):
     # Ler a planilha inteira ou por aba
-    df = pd.read_excel(arquivo_excel, sheet_name='LOTOFÁCIL')
+    df = pd.read_excel(arquivo_excel, sheet_name='LOTOFÁCIL', skiprows=1)
 
     # Verificar as colunas do DataFrame
     print("Colunas no DataFrame:", df.columns)
@@ -118,7 +118,7 @@ def atualizar_lista_jogos():
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"  # Caminho do seu arquivo Excel
 # Índices das colunas que você quer remover: 2, 18, 19, 20 até 33 (lembre-se que o índice é baseado em 0)
-indices_remover = [1, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
+indices_remover = [0, 1, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
 
 # Importa dados do Excel para o banco Importados.db
 importar_excel_para_sqlite(arquivo_excel, indices_remover)
