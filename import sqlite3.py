@@ -1,7 +1,7 @@
 import sqlite3
 
 # Conectar ao banco SQLite
-conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados do site da lotérica.db")  # Substitua pelo caminho correto do seu banco
+conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")  # Substitua pelo caminho correto do seu banco
 cursor = conn.cursor()
 
 # Listar todas as tabelas
