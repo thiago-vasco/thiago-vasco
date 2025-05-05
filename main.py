@@ -8,7 +8,27 @@ from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 
 def gerar_jogo():
-    return sorted(random.sample(range(1, 26), 15))
+    # Gerar um jogo com a quantidade de números ímpares selecionada nos checkboxes
+    impares_selecionados = [i for i in range(3, 14) if var_impares[i-3].get()]
+    if not impares_selecionados:
+        resultado_label.config(text="Selecione pelo menos uma quantidade de ímpares.")
+        return
+    
+    # Sortear a quantidade de números ímpares de acordo com o que foi marcado
+    qtd_impares = random.choice(impares_selecionados)
+    qtd_pares = 15 - qtd_impares
+
+    numeros_impares = [n for n in range(1, 26) if n % 2 != 0]
+    numeros_pares = [n for n in range(1, 26) if n % 2 == 0]
+    
+    jogo_impares = random.sample(numeros_impares, qtd_impares)
+    jogo_pares = random.sample(numeros_pares, qtd_pares)
+    
+    jogo = sorted(jogo_impares + jogo_pares)
+    
+    jogo_id = salvar_jogo(jogo)
+    resultado_label.config(text=f"Jogo nº {jogo_id}: {jogo}")
+    atualizar_lista_jogos()
 
 def salvar_jogo(jogo):
     conn = sqlite3.connect('JogosGerados.db')
@@ -255,8 +275,12 @@ def distribuicao_faixas_numericas():
     ax1.set_ylabel('Quantidade de Números Sorteados')
     ax1.set_title('Distribuição Numérica - Todos os Sorteios')
     ax1.grid(axis='y', linestyle='--', alpha=0.6)
-    ax1.set_ylim(9000, 10500)
+    ax1.set_ylim(10000, 10500)
     ax1.legend()
+
+    # Adicionando números sobre as barras
+    for i, (faixa, count) in enumerate(faixas.items()):
+        ax1.text(i, count + 10, str(count), ha='center', fontsize=10)
 
     # Gráfico 2: Distribuição de Faixas (Últimos 500 sorteios)
     ax2.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='royalblue', label='Últimos 500 sorteios')
@@ -264,9 +288,12 @@ def distribuicao_faixas_numericas():
     ax2.set_ylabel('Quantidade de Números Sorteados')
     ax2.set_title('Distribuição Numérica - Últimos 500 Sorteios')
     ax2.grid(axis='y', linestyle='--', alpha=0.6)
-    ax2.set_ylim(0, 2000)  # Definindo a escala do gráfico
+    ax2.set_ylim(1000, 2000)  # Definindo a escala do gráfico
     ax2.legend()
 
+    # Adicionando números sobre as barras
+    for i, (faixa, count) in enumerate(faixas_ultimos_500.items()):
+        ax2.text(i, count + 10, str(count), ha='center', fontsize=10)
     plt.tight_layout()
     plt.show()
 
@@ -371,6 +398,17 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 listbox_jogos = tk.Listbox(canvas, width=55, height=25, yscrollcommand=scrollbar.set)
 listbox_jogos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 scrollbar.config(command=listbox_jogos.yview)
+
+#Checkbox dos impares
+var_impares = []
+checkbox_frame = tk.Frame(frame_esquerdo)
+checkbox_frame.pack(pady=10)
+
+for i in range(3, 14):
+    var = tk.BooleanVar()
+    checkbox = tk.Checkbutton(checkbox_frame, text=f'{i} ímpares', variable=var)
+    checkbox.grid(row=i-3, column=0, sticky="w")
+    var_impares.append(var)
 
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
 gerar_btn.pack(pady=10)
