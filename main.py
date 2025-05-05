@@ -407,7 +407,7 @@ checkbox_frame.pack(pady=10)
 for i in range(3, 14):
     var = tk.BooleanVar()
     checkbox = tk.Checkbutton(checkbox_frame, text=f'{i} ímpares', variable=var)
-    checkbox.grid(row=0, column=i-3, padx=5, sticky="w")  # tudo na mesma row, mudando a coluna
+    checkbox.grid(row=4, column=i-3, padx=5, sticky="w")  # tudo na mesma row, mudando a coluna
     var_impares.append(var)
 
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
