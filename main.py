@@ -132,6 +132,53 @@ def contar_quantidade_primos():
     plt.tight_layout()
     plt.show()
 
+def distribuicao_faixas_numericas():
+    faixas = {
+        '1-5': 0,
+        '6-10': 0,
+        '11-15': 0,
+        '16-20': 0,
+        '21-25': 0
+    }
+
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
+    for linha in resultados:
+        numeros = linha[1:]
+        faixa_count = {'1-5':0, '6-10':0, '11-15':0, '16-20':0, '21-25':0}
+        for n in numeros:
+            if 1 <= n <= 5:
+                faixa_count['1-5'] += 1
+            elif 6 <= n <= 10:
+                faixa_count['6-10'] += 1
+            elif 11 <= n <= 15:
+                faixa_count['11-15'] += 1
+            elif 16 <= n <= 20:
+                faixa_count['16-20'] += 1
+            elif 21 <= n <= 25:
+                faixa_count['21-25'] += 1
+
+        for k in faixas:
+            faixas[k] += faixa_count[k]
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(faixas.keys(), faixas.values(), color='seagreen')
+    ax.set_xlabel('Faixas Numéricas')
+    ax.set_ylabel('Total de Números Sorteados')
+    ax.set_title('Distribuição Numérica por Faixas (Lotofácil)')
+    ax.grid(axis='y', linestyle='--', alpha=0.6)
+    ax.set_ylim(0, max(faixas.values()) + 1000)
+
+    for i, v in enumerate(faixas.values()):
+        ax.text(i, v + 20, str(v), ha='center', fontsize=8)
+
+    plt.tight_layout()
+    plt.show()
+
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"
 indices_remover = [1, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
@@ -170,11 +217,14 @@ resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
 # Botões para mostrar gráficos
-grafico_impares_btn = tk.Button(frame_esquerdo, text="Mostrar Gráfico de Ímpares", command=contar_quantidade_impares)
+grafico_impares_btn = tk.Button(frame_esquerdo, text="Gráfico de Ímpares", command=contar_quantidade_impares)
 grafico_impares_btn.pack(pady=10)
 
-grafico_primos_btn = tk.Button(frame_esquerdo, text="Mostrar Gráfico de Primos", command=contar_quantidade_primos)
+grafico_primos_btn = tk.Button(frame_esquerdo, text="Gráfico de Primos", command=contar_quantidade_primos)
 grafico_primos_btn.pack(pady=10)
+
+grafico_faixas_btn = tk.Button(frame_esquerdo, text="Gráfico Distribuição Numérica", command=distribuicao_faixas_numericas)
+grafico_faixas_btn.pack(pady=10)
 
 # Janela inicia sem jogos carregados
 root.protocol("WM_DELETE_WINDOW", on_close)
