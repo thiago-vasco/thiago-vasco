@@ -278,6 +278,57 @@ def distribuicao_faixas_numericas():
     plt.show()
 
 def grafico_frequencia_numeros():
+    import matplotlib.pyplot as plt
+    plt.close('all')  # Fecha todos os gráficos abertos
+
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
+    numeros = list(range(1, 26))
+    frequencia_todos = {n: 0 for n in numeros}
+    frequencia_ultimos_500 = {n: 0 for n in numeros}
+
+    total_resultados = len(resultados)
+    ultimos_500_resultados = resultados[-500:] if total_resultados >= 500 else resultados
+
+    for linha in resultados:
+        numeros_sorteio = linha[1:]
+        for n in numeros_sorteio:
+            frequencia_todos[n] += 1
+
+    for linha in ultimos_500_resultados:
+        numeros_sorteio = linha[1:]
+        for n in numeros_sorteio:
+            frequencia_ultimos_500[n] += 1
+
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+
+    ax1.bar([n - 0.2 for n in numeros], [frequencia_todos[n] for n in numeros], width=0.4, label='Todos os sorteios', color='mediumvioletred')
+    ax1.bar([n + 0.2 for n in numeros], [frequencia_ultimos_500[n] for n in numeros], width=0.4, label='Últimos 500 sorteios', color='royalblue')
+
+    ax1.set_xlabel('Número')
+    ax1.set_ylabel('Quantidade de vezes que saiu')
+    ax1.set_title('Frequência de cada número (Lotofácil)')
+    ax1.set_xticks(numeros)
+    ax1.legend()
+    ax1.grid(axis='y', linestyle='--', alpha=0.6)
+
+    max_valor_todos = max(frequencia_todos.values())
+    ax1.set_ylim(1800, max_valor_todos + 20)
+
+    for i, n in enumerate(numeros):
+        v_todos = frequencia_todos[n]
+        v_ultimos = frequencia_ultimos_500[n]
+
+        ax1.text(n - 0.2, v_todos + 2, str(v_todos), ha='center', fontsize=8)
+        ax1.text(n + 0.2, v_ultimos + 2, str(v_ultimos), ha='center', fontsize=8)
+
+    plt.tight_layout()
+    plt.show()
+
     conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM dados_importados")
