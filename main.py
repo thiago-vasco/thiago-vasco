@@ -311,7 +311,7 @@ def grafico_frequencia_numeros():
     ax1.set_ylabel('Frequência')
     ax1.grid(axis='y', linestyle='--', alpha=0.6)
     ax1.set_xticks(numeros)
-    #ax1.set_ylim(0, 800)
+    ax1.set_ylim(1500, 2000)
     for i, v in enumerate([frequencia_todos[n] for n in numeros]):
         ax1.text(i + 1, v + 2, str(v), ha='center', fontsize=8)
 
