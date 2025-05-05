@@ -78,28 +78,55 @@ def contar_quantidade_impares():
     resultados = cursor.fetchall()
     conn.close()
 
-    contagem = {i: 0 for i in range(3, 14)}
+    contagem_todos = {i: 0 for i in range(3, 14)}
+    contagem_ultimos_500 = {i: 0 for i in range(3, 14)}
 
+    # Contagem de ímpares para todos os jogos
     for linha in resultados:
         numeros = linha[1:]
         qtd_impares = sum(1 for n in numeros if n % 2 != 0)
         if 3 <= qtd_impares <= 13:
-            contagem[qtd_impares] += 1
+            contagem_todos[qtd_impares] += 1
 
+    # Contagem de ímpares para os últimos 500 jogos
+    conn = sqlite3.connect('JogosGerados.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
+    jogos_ultimos_500 = cursor.fetchall()
+    conn.close()
+
+    for jogo in jogos_ultimos_500:
+        numeros = jogo[1:]
+        qtd_impares = sum(1 for n in numeros if n % 2 != 0)
+        if 3 <= qtd_impares <= 13:
+            contagem_ultimos_500[qtd_impares] += 1
+
+    # Gráfico para todos os jogos
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.bar(contagem.keys(), contagem.values(), color='mediumvioletred')
+    ax.bar(contagem_todos.keys(), contagem_todos.values(), color='mediumvioletred', alpha=0.6, label='Todos os Jogos')
+
+    # Gráfico para os últimos 500 jogos
+    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='dodgerblue', alpha=0.6, label='Últimos 500 Jogos')
+
     ax.set_xlabel('Quantidade de Números Ímpares no Sorteio')
     ax.set_ylabel('Quantidade de Sorteios')
     ax.set_title('Distribuição de Ímpares por Sorteio (Lotofácil)')
     ax.grid(axis='y', linestyle='--', alpha=0.6)
     ax.set_xticks(range(3, 14))
-    ax.set_ylim(0, max(contagem.values()) + 30)
+    ax.set_ylim(0, max(max(contagem_todos.values()), max(contagem_ultimos_500.values())) + 30)
 
-    for i in contagem:
-        ax.text(i, contagem[i] + 2, str(contagem[i]), ha='center', fontsize=8)
+    # Adiciona as legendas
+    ax.legend()
+
+    for i in contagem_todos:
+        ax.text(i, contagem_todos[i] + 2, str(contagem_todos[i]), ha='center', fontsize=8)
+
+    for i in contagem_ultimos_500:
+        ax.text(i, contagem_ultimos_500[i] + 2, str(contagem_ultimos_500[i]), ha='center', fontsize=8)
 
     plt.tight_layout()
     plt.show()
+
 
 def contar_quantidade_primos():
     primos = [2, 3, 5, 7, 11, 13, 17, 19, 23]
@@ -109,31 +136,65 @@ def contar_quantidade_primos():
     resultados = cursor.fetchall()
     conn.close()
 
-    contagem = {i: 0 for i in range(3, 14)}
+    contagem_todos = {i: 0 for i in range(3, 14)}
+    contagem_ultimos_500 = {i: 0 for i in range(3, 14)}
 
+    # Contagem de primos para todos os jogos
     for linha in resultados:
         numeros = linha[1:]
         qtd_primos = sum(1 for n in numeros if n in primos)
         if 3 <= qtd_primos <= 13:
-            contagem[qtd_primos] += 1
+            contagem_todos[qtd_primos] += 1
 
+    # Contagem de primos para os últimos 500 jogos
+    conn = sqlite3.connect('JogosGerados.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
+    jogos_ultimos_500 = cursor.fetchall()
+    conn.close()
+
+    for jogo in jogos_ultimos_500:
+        numeros = jogo[1:]
+        qtd_primos = sum(1 for n in numeros if n in primos)
+        if 3 <= qtd_primos <= 13:
+            contagem_ultimos_500[qtd_primos] += 1
+
+    # Gráfico para todos os jogos
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.bar(contagem.keys(), contagem.values(), color='royalblue')
+    ax.bar(contagem_todos.keys(), contagem_todos.values(), color='royalblue', alpha=0.6, label='Todos os Jogos')
+
+    # Gráfico para os últimos 500 jogos
+    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='tomato', alpha=0.6, label='Últimos 500 Jogos')
+
     ax.set_xlabel('Quantidade de Números Primos no Sorteio')
     ax.set_ylabel('Quantidade de Sorteios')
     ax.set_title('Distribuição de Primos por Sorteio (Lotofácil)')
     ax.grid(axis='y', linestyle='--', alpha=0.6)
     ax.set_xticks(range(3, 14))
-    ax.set_ylim(0, max(contagem.values()) + 30)
+    ax.set_ylim(0, max(max(contagem_todos.values()), max(contagem_ultimos_500.values())) + 30)
 
-    for i in contagem:
-        ax.text(i, contagem[i] + 2, str(contagem[i]), ha='center', fontsize=8)
+    # Adiciona as legendas
+    ax.legend()
+
+    for i in contagem_todos:
+        ax.text(i, contagem_todos[i] + 2, str(contagem_todos[i]), ha='center', fontsize=8)
+
+    for i in contagem_ultimos_500:
+        ax.text(i, contagem_ultimos_500[i] + 2, str(contagem_ultimos_500[i]), ha='center', fontsize=8)
 
     plt.tight_layout()
     plt.show()
 
+
 def distribuicao_faixas_numericas():
-    faixas = {
+    faixas_todos = {
+        '1-5': 0,
+        '6-10': 0,
+        '11-15': 0,
+        '16-20': 0,
+        '21-25': 0
+    }
+    faixas_ultimos_500 = {
         '1-5': 0,
         '6-10': 0,
         '11-15': 0,
@@ -147,6 +208,7 @@ def distribuicao_faixas_numericas():
     resultados = cursor.fetchall()
     conn.close()
 
+    # Contagem das faixas numéricas para todos os jogos
     for linha in resultados:
         numeros = linha[1:]
         faixa_count = {'1-5':0, '6-10':0, '11-15':0, '16-20':0, '21-25':0}
@@ -162,22 +224,59 @@ def distribuicao_faixas_numericas():
             elif 21 <= n <= 25:
                 faixa_count['21-25'] += 1
 
-        for k in faixas:
-            faixas[k] += faixa_count[k]
+        for k in faixas_todos:
+            faixas_todos[k] += faixa_count[k]
 
+    # Contagem das faixas numéricas para os últimos 500 jogos
+    conn = sqlite3.connect('JogosGerados.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
+    jogos_ultimos_500 = cursor.fetchall()
+    conn.close()
+
+    for jogo in jogos_ultimos_500:
+        numeros = jogo[1:]
+        faixa_count = {'1-5':0, '6-10':0, '11-15':0, '16-20':0, '21-25':0}
+        for n in numeros:
+            if 1 <= n <= 5:
+                faixa_count['1-5'] += 1
+            elif 6 <= n <= 10:
+                faixa_count['6-10'] += 1
+            elif 11 <= n <= 15:
+                faixa_count['11-15'] += 1
+            elif 16 <= n <= 20:
+                faixa_count['16-20'] += 1
+            elif 21 <= n <= 25:
+                faixa_count['21-25'] += 1
+
+        for k in faixas_ultimos_500:
+            faixas_ultimos_500[k] += faixa_count[k]
+
+    # Gráfico para todos os jogos
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.bar(faixas.keys(), faixas.values(), color='seagreen')
+    ax.bar(faixas_todos.keys(), faixas_todos.values(), color='seagreen', alpha=0.6, label='Todos os Jogos')
+
+    # Gráfico para os últimos 500 jogos
+    ax.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='orange', alpha=0.6, label='Últimos 500 Jogos')
+
     ax.set_xlabel('Faixas Numéricas')
     ax.set_ylabel('Total de Números Sorteados')
     ax.set_title('Distribuição Numérica por Faixas (Lotofácil)')
     ax.grid(axis='y', linestyle='--', alpha=0.6)
-    ax.set_ylim(0, max(faixas.values()) + 1000)
+    ax.set_ylim(0, 10500)  # Ajuste da escala do gráfico
 
-    for i, v in enumerate(faixas.values()):
+    # Adiciona as legendas
+    ax.legend()
+
+    for i, v in enumerate(faixas_todos.values()):
+        ax.text(i, v + 20, str(v), ha='center', fontsize=8)
+
+    for i, v in enumerate(faixas_ultimos_500.values()):
         ax.text(i, v + 20, str(v), ha='center', fontsize=8)
 
     plt.tight_layout()
     plt.show()
+
 
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"
