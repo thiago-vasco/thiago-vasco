@@ -148,7 +148,7 @@ resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
 # Atualiza lista de jogos
-atualizar_lista_jogos()
+# atualizar_lista_jogos()
 
 # Gera gráfico ao carregar
 contar_quantidade_impares()
