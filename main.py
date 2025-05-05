@@ -91,7 +91,7 @@ def contar_quantidade_impares():
     # Contagem de ímpares para os últimos 500 jogos
     conn = sqlite3.connect('JogosGerados.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 100")
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
     jogos_ultimos_500 = cursor.fetchall()
     conn.close()
 
@@ -106,7 +106,7 @@ def contar_quantidade_impares():
     ax.bar(contagem_todos.keys(), contagem_todos.values(), color='mediumvioletred', alpha=0.6, label='Todos os Jogos')
 
     # Gráfico para os últimos 500 jogos
-    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='dodgerblue', alpha=0.6, label='Últimos 100 Jogos')
+    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='dodgerblue', alpha=0.6, label='Últimos 500 Jogos')
 
     ax.set_xlabel('Quantidade de Números Ímpares no Sorteio')
     ax.set_ylabel('Quantidade de Sorteios')
@@ -149,7 +149,7 @@ def contar_quantidade_primos():
     # Contagem de primos para os últimos 500 jogos
     conn = sqlite3.connect('JogosGerados.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 100")
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
     jogos_ultimos_500 = cursor.fetchall()
     conn.close()
 
@@ -164,7 +164,7 @@ def contar_quantidade_primos():
     ax.bar(contagem_todos.keys(), contagem_todos.values(), color='royalblue', alpha=0.6, label='Todos os Jogos')
 
     # Gráfico para os últimos 500 jogos
-    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='tomato', alpha=0.6, label='Últimos 100 Jogos')
+    ax.bar(contagem_ultimos_500.keys(), contagem_ultimos_500.values(), color='tomato', alpha=0.6, label='Últimos 500 Jogos')
 
     ax.set_xlabel('Quantidade de Números Primos no Sorteio')
     ax.set_ylabel('Quantidade de Sorteios')
@@ -230,7 +230,7 @@ def distribuicao_faixas_numericas():
     # Contagem das faixas numéricas para os últimos 500 jogos
     conn = sqlite3.connect('JogosGerados.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 100")
+    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
     jogos_ultimos_500 = cursor.fetchall()
     conn.close()
 
@@ -257,7 +257,7 @@ def distribuicao_faixas_numericas():
     ax.bar(faixas_todos.keys(), faixas_todos.values(), color='seagreen', alpha=0.6, label='Todos os Jogos')
 
     # Gráfico para os últimos 500 jogos
-    ax.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='orange', alpha=0.6, label='Últimos 100 Jogos')
+    ax.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='orange', alpha=0.6, label='Últimos 500 Jogos')
 
     ax.set_xlabel('Faixas Numéricas')
     ax.set_ylabel('Total de Números Sorteados')
