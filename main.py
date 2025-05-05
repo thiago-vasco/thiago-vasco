@@ -279,6 +279,7 @@ def distribuicao_faixas_numericas():
 
 def grafico_frequencia_numeros():
     import matplotlib.pyplot as plt
+    import sqlite3
     plt.close('all')  # Fecha todos os gráficos abertos
 
     conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
@@ -304,30 +305,47 @@ def grafico_frequencia_numeros():
         for n in numeros_sorteio:
             frequencia_ultimos_500[n] += 1
 
-    fig, ax1 = plt.subplots(figsize=(12, 6))
+    # Criar a figura e os dois subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
 
+    # Gráfico 1: todos vs últimos 500 (escala normal)
     ax1.bar([n - 0.2 for n in numeros], [frequencia_todos[n] for n in numeros], width=0.4, label='Todos os sorteios', color='mediumvioletred')
     ax1.bar([n + 0.2 for n in numeros], [frequencia_ultimos_500[n] for n in numeros], width=0.4, label='Últimos 500 sorteios', color='royalblue')
 
     ax1.set_xlabel('Número')
-    ax1.set_ylabel('Quantidade de vezes que saiu')
-    ax1.set_title('Frequência de cada número (Lotofácil)')
+    ax1.set_ylabel('Número de jogos')
+    ax1.set_title('Frequência de cada número (Todos os Jogos)')
     ax1.set_xticks(numeros)
     ax1.legend()
     ax1.grid(axis='y', linestyle='--', alpha=0.6)
 
     max_valor_todos = max(frequencia_todos.values())
-    ax1.set_ylim(1800, max_valor_todos + 20)
+    ax1.set_ylim(1900, max_valor_todos + 20)
 
-    for i, n in enumerate(numeros):
+    for n in numeros:
         v_todos = frequencia_todos[n]
         v_ultimos = frequencia_ultimos_500[n]
-
         ax1.text(n - 0.2, v_todos + 2, str(v_todos), ha='center', fontsize=8)
         ax1.text(n + 0.2, v_ultimos + 2, str(v_ultimos), ha='center', fontsize=8)
 
+    # Gráfico 2: últimos 500 com escala 250–350
+    ax2.bar(numeros, [frequencia_ultimos_500[n] for n in numeros], width=0.5, color='royalblue')
+
+    ax2.set_xlabel('Número')
+    ax2.set_ylabel('Número de jogos')
+    ax2.set_title('Frequência de cada número - Últimos 500 sorteios )')
+    ax2.set_xticks(numeros)
+    ax2.grid(axis='y', linestyle='--', alpha=0.6)
+    ax2.set_ylim(250, 350)
+
+    for n in numeros:
+        v_ultimos = frequencia_ultimos_500[n]
+        ax2.text(n, v_ultimos + 1, str(v_ultimos), ha='center', fontsize=8)
+
     plt.tight_layout()
     plt.show()
+
+
 
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"
