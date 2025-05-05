@@ -311,6 +311,58 @@ def grafico_frequencia_numeros():
     ax1.set_ylabel('Frequência')
     ax1.grid(axis='y', linestyle='--', alpha=0.6)
     ax1.set_xticks(numeros)
+    ax1.set_ylim(1800, 2000)  # aqui está o ajuste que você pediu
+
+    for i, v in enumerate([frequencia_todos[n] for n in numeros]):
+        ax1.text(i + 1, v + 2, str(v), ha='center', fontsize=8)
+
+    # Gráfico para últimos 500 sorteios
+    ax2.bar(numeros, [frequencia_ultimos_500[n] for n in numeros], color='mediumseagreen')
+    ax2.set_title('Frequência de cada número nos ÚLTIMOS 500 sorteios')
+    ax2.set_xlabel('Número')
+    ax2.set_ylabel('Frequência')
+    ax2.grid(axis='y', linestyle='--', alpha=0.6)
+    ax2.set_xticks(numeros)
+
+    for i, v in enumerate([frequencia_ultimos_500[n] for n in numeros]):
+        ax2.text(i + 1, v + 2, str(v), ha='center', fontsize=8)
+
+    plt.tight_layout()
+    plt.show()
+
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
+    frequencia_todos = {i: 0 for i in range(1, 26)}
+    frequencia_ultimos_500 = {i: 0 for i in range(1, 26)}
+
+    # Frequência em todos os sorteios
+    for linha in resultados:
+        numeros = linha[1:]
+        for n in numeros:
+            frequencia_todos[n] += 1
+
+    # Frequência nos últimos 500 sorteios
+    ultimos_500 = resultados[-500:] if len(resultados) >= 500 else resultados
+    for linha in ultimos_500:
+        numeros = linha[1:]
+        for n in numeros:
+            frequencia_ultimos_500[n] += 1
+
+    numeros = list(range(1, 26))
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+
+    # Gráfico para todos os sorteios
+    ax1.bar(numeros, [frequencia_todos[n] for n in numeros], color='slateblue')
+    ax1.set_title('Frequência de cada número em TODOS os sorteios')
+    ax1.set_xlabel('Número')
+    ax1.set_ylabel('Frequência')
+    ax1.grid(axis='y', linestyle='--', alpha=0.6)
+    ax1.set_xticks(numeros)
     ax1.set_ylim(1800, 2000)
     for i, v in enumerate([frequencia_todos[n] for n in numeros]):
         ax1.text(i + 1, v + 2, str(v), ha='center', fontsize=8)
