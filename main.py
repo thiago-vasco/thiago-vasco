@@ -187,13 +187,25 @@ def contar_quantidade_primos():
 
 
 def distribuicao_faixas_numericas():
-    faixas_todos = {
+    import matplotlib.pyplot as plt
+    import sqlite3
+    plt.close('all')  # Fecha todos os gráficos abertos
+
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
+    # Faixas numéricas
+    faixas = {
         '1-5': 0,
         '6-10': 0,
         '11-15': 0,
         '16-20': 0,
         '21-25': 0
     }
+    
     faixas_ultimos_500 = {
         '1-5': 0,
         '6-10': 0,
@@ -202,80 +214,62 @@ def distribuicao_faixas_numericas():
         '21-25': 0
     }
 
-    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM dados_importados")
-    resultados = cursor.fetchall()
-    conn.close()
-
-    # Contagem das faixas numéricas para todos os jogos
+    # Para todos os resultados
     for linha in resultados:
         numeros = linha[1:]
-        faixa_count = {'1-5':0, '6-10':0, '11-15':0, '16-20':0, '21-25':0}
         for n in numeros:
             if 1 <= n <= 5:
-                faixa_count['1-5'] += 1
+                faixas['1-5'] += 1
             elif 6 <= n <= 10:
-                faixa_count['6-10'] += 1
+                faixas['6-10'] += 1
             elif 11 <= n <= 15:
-                faixa_count['11-15'] += 1
+                faixas['11-15'] += 1
             elif 16 <= n <= 20:
-                faixa_count['16-20'] += 1
+                faixas['16-20'] += 1
             elif 21 <= n <= 25:
-                faixa_count['21-25'] += 1
+                faixas['21-25'] += 1
 
-        for k in faixas_todos:
-            faixas_todos[k] += faixa_count[k]
-
-    # Contagem das faixas numéricas para os últimos 500 jogos
-    conn = sqlite3.connect('JogosGerados.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM jogos ORDER BY id DESC LIMIT 500")
-    jogos_ultimos_500 = cursor.fetchall()
-    conn.close()
-
-    for jogo in jogos_ultimos_500:
-        numeros = jogo[1:]
-        faixa_count = {'1-5':0, '6-10':0, '11-15':0, '16-20':0, '21-25':0}
+    # Para os últimos 500 resultados
+    total_resultados = len(resultados)
+    ultimos_500_resultados = resultados[-500:] if total_resultados >= 500 else resultados
+    for linha in ultimos_500_resultados:
+        numeros = linha[1:]
         for n in numeros:
             if 1 <= n <= 5:
-                faixa_count['1-5'] += 1
+                faixas_ultimos_500['1-5'] += 1
             elif 6 <= n <= 10:
-                faixa_count['6-10'] += 1
+                faixas_ultimos_500['6-10'] += 1
             elif 11 <= n <= 15:
-                faixa_count['11-15'] += 1
+                faixas_ultimos_500['11-15'] += 1
             elif 16 <= n <= 20:
-                faixa_count['16-20'] += 1
+                faixas_ultimos_500['16-20'] += 1
             elif 21 <= n <= 25:
-                faixa_count['21-25'] += 1
+                faixas_ultimos_500['21-25'] += 1
 
-        for k in faixas_ultimos_500:
-            faixas_ultimos_500[k] += faixa_count[k]
+    # Criar a figura e os dois subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
 
-    # Gráfico para todos os jogos
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.bar(faixas_todos.keys(), faixas_todos.values(), color='seagreen', alpha=0.6, label='Todos os Jogos')
+    # Gráfico 1: Distribuição de Faixas (Todos os sorteios)
+    ax1.bar(faixas.keys(), faixas.values(), color='seagreen', label='Todos os sorteios')
+    ax1.set_xlabel('Faixas Numéricas')
+    ax1.set_ylabel('Quantidade de Números Sorteados')
+    ax1.set_title('Distribuição Numérica - Todos os Sorteios')
+    ax1.grid(axis='y', linestyle='--', alpha=0.6)
+    ax1.set_ylim(9000, 10500)
+    ax1.legend()
 
-    # Gráfico para os últimos 500 jogos
-    ax.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='orange', alpha=0.6, label='Últimos 500 Jogos')
-
-    ax.set_xlabel('Faixas Numéricas')
-    ax.set_ylabel('Total de Números Sorteados')
-    ax.set_title('Distribuição Numérica por Faixas (Lotofácil)')
-    ax.grid(axis='y', linestyle='--', alpha=0.6)
-    ax.set_ylim(0, 10500)  # Ajuste da escala do gráfico
-
-    # Adiciona as legendas
-    ax.legend()
-
-    for i, v in enumerate(faixas_todos.values()):
-        ax.text(i, v + 20, str(v), ha='center', fontsize=8)
-
-    for i, v in enumerate(faixas_ultimos_500.values()):
-        ax.text(i, v + 20, str(v), ha='center', fontsize=8)
+    # Gráfico 2: Distribuição de Faixas (Últimos 500 sorteios)
+    ax2.bar(faixas_ultimos_500.keys(), faixas_ultimos_500.values(), color='royalblue', label='Últimos 500 sorteios')
+    ax2.set_xlabel('Faixas Numéricas')
+    ax2.set_ylabel('Quantidade de Números Sorteados')
+    ax2.set_title('Distribuição Numérica - Últimos 500 Sorteios')
+    ax2.grid(axis='y', linestyle='--', alpha=0.6)
+    ax2.set_ylim(200, 350)  # Definindo a escala do gráfico
+    ax2.legend()
 
     plt.tight_layout()
     plt.show()
+
 
 def grafico_frequencia_numeros():
     import matplotlib.pyplot as plt
@@ -314,7 +308,7 @@ def grafico_frequencia_numeros():
 
     ax1.set_xlabel('Número')
     ax1.set_ylabel('Número de jogos')
-    ax1.set_title('Frequência de cada número (Todos os Jogos)')
+    ax1.set_title('Frequência de cada número - Todos os sorteios')
     ax1.set_xticks(numeros)
     ax1.legend()
     ax1.grid(axis='y', linestyle='--', alpha=0.6)
@@ -333,7 +327,7 @@ def grafico_frequencia_numeros():
 
     ax2.set_xlabel('Número')
     ax2.set_ylabel('Número de jogos')
-    ax2.set_title('Frequência de cada número - Últimos 500 sorteios )')
+    ax2.set_title('Frequência de cada número - Últimos 500 sorteios')
     ax2.set_xticks(numeros)
     ax2.grid(axis='y', linestyle='--', alpha=0.6)
     ax2.set_ylim(250, 350)
