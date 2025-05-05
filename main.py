@@ -399,7 +399,7 @@ listbox_jogos = tk.Listbox(canvas, width=55, height=25, yscrollcommand=scrollbar
 listbox_jogos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 scrollbar.config(command=listbox_jogos.yview)
 
-#Checkbox dos impares
+# Checkbox dos ímpares
 var_impares = []
 checkbox_frame = tk.Frame(frame_esquerdo)
 checkbox_frame.pack(pady=10)
@@ -407,7 +407,7 @@ checkbox_frame.pack(pady=10)
 for i in range(3, 14):
     var = tk.BooleanVar()
     checkbox = tk.Checkbutton(checkbox_frame, text=f'{i} ímpares', variable=var)
-    checkbox.grid(row=i-3, column=0, sticky="w")
+    checkbox.grid(row=0, column=i-3, padx=5, sticky="w")  # tudo na mesma row, mudando a coluna
     var_impares.append(var)
 
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
