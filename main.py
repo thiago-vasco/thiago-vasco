@@ -5,18 +5,14 @@ import sqlite3
 import os
 import subprocess
 from sqlalchemy import create_engine
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
-# Função para gerar um jogo de 15 números aleatórios entre 1 e 25
 def gerar_jogo():
     return sorted(random.sample(range(1, 26), 15))
 
-# Função para salvar o jogo no banco de dados SQLite
 def salvar_jogo(jogo):
     conn = sqlite3.connect('JogosGerados.db')
     c = conn.cursor()
-
     c.execute(''' 
         CREATE TABLE IF NOT EXISTS jogos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,13 +21,11 @@ def salvar_jogo(jogo):
             n11 INTEGER, n12 INTEGER, n13 INTEGER, n14 INTEGER, n15 INTEGER
         )
     ''')
-
     c.execute(''' 
         INSERT INTO jogos (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10,
                            n11, n12, n13, n14, n15)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', tuple(jogo))
-
     jogo_id = c.lastrowid
     conn.commit()
     conn.close()
@@ -92,23 +86,51 @@ def contar_quantidade_impares():
         if 3 <= qtd_impares <= 13:
             contagem[qtd_impares] += 1
 
-    # Gera gráfico de barras
-    fig, ax = plt.subplots(figsize=(7, 4))  # aumenta o tamanho
-    ax.bar(contagem.keys(), contagem.values(), color='purple')
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(contagem.keys(), contagem.values(), color='mediumvioletred')
     ax.set_xlabel('Quantidade de Números Ímpares no Sorteio')
     ax.set_ylabel('Quantidade de Sorteios')
     ax.set_title('Distribuição de Ímpares por Sorteio (Lotofácil)')
     ax.grid(axis='y', linestyle='--', alpha=0.6)
     ax.set_xticks(range(3, 14))
-    ax.set_ylim(0, max(contagem.values()) + 30)  # aumenta escala vertical
+    ax.set_ylim(0, max(contagem.values()) + 30)
 
     for i in contagem:
         ax.text(i, contagem[i] + 2, str(contagem[i]), ha='center', fontsize=8)
 
-    # Coloca o gráfico na interface
-    canvas_grafico = FigureCanvasTkAgg(fig, master=frame_esquerdo)
-    canvas_grafico.draw()
-    canvas_grafico.get_tk_widget().pack(pady=10)
+    plt.tight_layout()
+    plt.show()
+
+def contar_quantidade_primos():
+    primos = [2, 3, 5, 7, 11, 13, 17, 19, 23]
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
+    contagem = {i: 0 for i in range(3, 14)}
+
+    for linha in resultados:
+        numeros = linha[1:]
+        qtd_primos = sum(1 for n in numeros if n in primos)
+        if 3 <= qtd_primos <= 13:
+            contagem[qtd_primos] += 1
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(contagem.keys(), contagem.values(), color='royalblue')
+    ax.set_xlabel('Quantidade de Números Primos no Sorteio')
+    ax.set_ylabel('Quantidade de Sorteios')
+    ax.set_title('Distribuição de Primos por Sorteio (Lotofácil)')
+    ax.grid(axis='y', linestyle='--', alpha=0.6)
+    ax.set_xticks(range(3, 14))
+    ax.set_ylim(0, max(contagem.values()) + 30)
+
+    for i in contagem:
+        ax.text(i, contagem[i] + 2, str(contagem[i]), ha='center', fontsize=8)
+
+    plt.tight_layout()
+    plt.show()
 
 # Caminho do arquivo Excel e índices das colunas a serem removidas
 arquivo_excel = r"E:\ProjetoLOTOFACIL\Resultados.xlsx"
@@ -147,11 +169,13 @@ gerar_btn.pack(pady=10)
 resultado_label = tk.Label(frame_esquerdo, text="Clique para gerar um jogo.")
 resultado_label.pack(pady=10)
 
-# Atualiza lista de jogos
-# atualizar_lista_jogos()
+# Botões para mostrar gráficos
+grafico_impares_btn = tk.Button(frame_esquerdo, text="Mostrar Gráfico de Ímpares", command=contar_quantidade_impares)
+grafico_impares_btn.pack(pady=10)
 
-# Gera gráfico ao carregar
-contar_quantidade_impares()
+grafico_primos_btn = tk.Button(frame_esquerdo, text="Mostrar Gráfico de Primos", command=contar_quantidade_primos)
+grafico_primos_btn.pack(pady=10)
 
+# Janela inicia sem jogos carregados
 root.protocol("WM_DELETE_WINDOW", on_close)
 root.mainloop()
