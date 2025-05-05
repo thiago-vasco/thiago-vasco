@@ -284,6 +284,61 @@ def grafico_frequencia_numeros():
     resultados = cursor.fetchall()
     conn.close()
 
+    numeros = list(range(1, 26))
+    frequencia_todos = {n: 0 for n in numeros}
+    frequencia_ultimos_500 = {n: 0 for n in numeros}
+
+    total_resultados = len(resultados)
+    ultimos_500_resultados = resultados[-500:] if total_resultados >= 500 else resultados
+
+    # Contagem para todos os sorteios
+    for linha in resultados:
+        numeros_sorteio = linha[1:]
+        for n in numeros_sorteio:
+            frequencia_todos[n] += 1
+
+    # Contagem para os últimos 500 sorteios
+    for linha in ultimos_500_resultados:
+        numeros_sorteio = linha[1:]
+        for n in numeros_sorteio:
+            frequencia_ultimos_500[n] += 1
+
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+
+    # Plot para todos os sorteios
+    ax1.bar([n - 0.2 for n in numeros], [frequencia_todos[n] for n in numeros], width=0.4, label='Todos os sorteios', color='mediumvioletred')
+
+    # Plot para os últimos 500 sorteios
+    ax1.bar([n + 0.2 for n in numeros], [frequencia_ultimos_500[n] for n in numeros], width=0.4, label='Últimos 500 sorteios', color='royalblue')
+
+    ax1.set_xlabel('Número')
+    ax1.set_ylabel('Quantidade de vezes que saiu')
+    ax1.set_title('Frequência de cada número (Lotofácil)')
+    ax1.set_xticks(numeros)
+    ax1.legend()
+    ax1.grid(axis='y', linestyle='--', alpha=0.6)
+
+    # Definir ylim de 1800 até o maior valor + 20
+    max_valor_todos = max(frequencia_todos.values())
+    ax1.set_ylim(1800, max_valor_todos + 20)
+
+    # Adicionar os valores em cima das barras
+    for i, n in enumerate(numeros):
+        v_todos = frequencia_todos[n]
+        v_ultimos = frequencia_ultimos_500[n]
+
+        ax1.text(n - 0.2, v_todos + 2, str(v_todos), ha='center', fontsize=8)
+        ax1.text(n + 0.2, v_ultimos + 2, str(v_ultimos), ha='center', fontsize=8)
+
+    plt.tight_layout()
+    plt.show()
+
+    conn = sqlite3.connect(r"E:\ProjetoLOTOFACIL\Importados.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dados_importados")
+    resultados = cursor.fetchall()
+    conn.close()
+
     frequencia_todos = {i: 0 for i in range(1, 26)}
     frequencia_ultimos_500 = {i: 0 for i in range(1, 26)}
 
