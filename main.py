@@ -404,10 +404,17 @@ var_impares = []
 checkbox_frame = tk.Frame(frame_esquerdo)
 checkbox_frame.pack(pady=10)
 
-for i in range(3, 14):
+colunas_por_linha = 5
+
+for idx, i in enumerate(range(3, 14)):
     var = tk.BooleanVar()
     checkbox = tk.Checkbutton(checkbox_frame, text=f'{i} ímpares', variable=var)
-    checkbox.grid(row=4, column=i-3, padx=5, sticky="w")  # tudo na mesma row, mudando a coluna
+    
+    # Calcula linha e coluna
+    row = idx // colunas_por_linha
+    col = idx % colunas_por_linha
+    
+    checkbox.grid(row=row, column=col, padx=5, pady=2, sticky="w")
     var_impares.append(var)
 
 gerar_btn = tk.Button(frame_esquerdo, text="Gerar Jogo", command=mostrar_jogo)
