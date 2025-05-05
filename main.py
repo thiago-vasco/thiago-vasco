@@ -264,7 +264,7 @@ def distribuicao_faixas_numericas():
     ax2.set_ylabel('Quantidade de Números Sorteados')
     ax2.set_title('Distribuição Numérica - Últimos 500 Sorteios')
     ax2.grid(axis='y', linestyle='--', alpha=0.6)
-    ax2.set_ylim(200, 350)  # Definindo a escala do gráfico
+    ax2.set_ylim(200, 1000)  # Definindo a escala do gráfico
     ax2.legend()
 
     plt.tight_layout()
