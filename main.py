@@ -170,7 +170,7 @@ def contar_quantidade_primos():
     ax.set_ylabel('Quantidade de Sorteios')
     ax.set_title('Distribuição de Primos por Sorteio (Lotofácil)')
     ax.grid(axis='y', linestyle='--', alpha=0.6)
-    ax.set_xticks(range(3, 14))
+    ax.set_xticks(range(0, 14))
     ax.set_ylim(0, max(max(contagem_todos.values()), max(contagem_ultimos_500.values())) + 30)
 
     # Adiciona as legendas
